@@ -52,6 +52,12 @@ myAUC <- round(AUC, digits =3)
 plot(perf,ylim=c(0,1),xlim=c(0,1),yaxs='i', xaxs='i',col="darkblue",lwd=5)
 abline(0,1,col="gray",lty=1)
 
+### live prediction
+train_data <- train_data %>% select(-group)
+RF_model <- randomForest(target ~ ., data=train_data, nodesize=10, na.action=na.omit, ntree=100)
+live_prediction <- predict(RF_model,test_data,type="prob")
+live_prediction_p <- cbind(test_data, as.data.frame(live_prediction) %>% select(P) ) %>% mutate(pred = ifelse(P>0.5,1,0))
+
 
 
 
